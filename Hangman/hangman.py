@@ -35,9 +35,25 @@ def advanced_version():
             continue
 
 
+def version_with_tips():
+    are_we_playing = True
+    word = random.choice(words)
+    tips = word[:3] + ("-" * (len(word)-3))
+    # print(tips)
+    while are_we_playing:
+        # print(word)
+        answer = (input("Guess the word " + tips + ": > ")).lower()
+        if answer == word:
+            print("You survived!")
+            are_we_playing = False
+        else:
+            print("You lost!")
+            continue
+
 hangman_greeting()
 
 # simplified_version()
 
-advanced_version()
+# advanced_version()
 
+version_with_tips()
