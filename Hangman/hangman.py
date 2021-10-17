@@ -1,4 +1,5 @@
 from random import choice
+used_letters_hungman = [ "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" ]
 words = ["bank", "belt", "bomb", "bird", "boom"]
 
 def hangman_greeting():
@@ -90,7 +91,11 @@ def hangman_version2():
     used_leter = []
     while attempts > 0 and guessed_word != word:
         print("attempts", attempts)
+
         answer = (input("Guess the word " + guessed_word + ": > ")).lower()
+        if used_letters_hungman.index(answer) == -1:
+            print("Please enter a lowercase English letter.")
+            answer = (input("Guess the word " + guessed_word + ": > ")).lower()
         while answer in used_leter:
             if answer in word:
                 attempts -= 1
@@ -121,6 +126,49 @@ def hangman_version2():
         print("You survived!")
 
 
+def hangman_version3():
+    attempts = 8
+    word = choice(words)
+    print(word)
+    guessed_word = '-' * len(word)
+    used_leter = []
+    while attempts > 0 and guessed_word != word:
+        print("attempts", attempts)
+        answer = (input("Guess the word " + guessed_word + ": > ")).lower()
+        while answer in used_leter:
+            if answer in word:
+                # attempts -= 1
+                print("You\'ve already guessed this letter.")
+                break
+            else:
+                break
+        used_leter.append(answer)
+        if answer in word:
+            guessed_letter = ''
+            for letter in range(len(word)):
+                if answer == word[letter]:
+                    guessed_letter += answer
+                else:
+                    guessed_letter += guessed_word[letter]
+            guessed_word = guessed_letter
+        else:
+
+            print("That letter doesn't appear in the word")
+            if answer in guessed_letter:
+                attempts += 0
+            else:
+                attempts -= 1
+            guessed_letter += answer
+
+
+    if attempts <= 0:
+        print("You lost!")
+    else:
+        print(guessed_letter + "\nYou guessed the word!")
+
+        print("You survived!")
+
+
 hangman_greeting()
 
 
@@ -136,5 +184,8 @@ hangman_greeting()
 # hangman_version1()
 
 
-hangman_version2()
+# hangman_version2()
+
+
+hangman_version3()
 
