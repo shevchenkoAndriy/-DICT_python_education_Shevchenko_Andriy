@@ -82,18 +82,59 @@ def hangman_version1():
         print("You survived!")
 
 
+def hangman_version2():
+    attempts = 8
+    word = choice(words)
+    print(word)
+    guessed_word = '-' * len(word)
+    used_leter = []
+    while attempts > 0 and guessed_word != word:
+        print("attempts", attempts)
+        answer = (input("Guess the word " + guessed_word + ": > ")).lower()
+        while answer in used_leter:
+            if answer in word:
+                attempts -= 1
+                print("No improvements")
+                # print("You\'ve already guessed this letter.")
+                break
+            else:
+                break
+        used_leter.append(answer)
+        if answer in word:
+            guessed_letter = ''
+            for letter in range(len(word)):
+                if answer == word[letter]:
+                    guessed_letter += answer
+                else:
+                    guessed_letter += guessed_word[letter]
+            guessed_word = guessed_letter
+
+        else:
+            print("That letter doesn't appear in the word")
+            if answer in used_leter:
+                attempts -= 1
+    if attempts <= 0:
+        print("You lost!")
+    else:
+        print(guessed_letter + "\nYou guessed the word!")
+
+        print("You survived!")
 
 
 hangman_greeting()
 
+
 # simplified_version()
+
 
 # advanced_version()
 
+
 # version_with_tips()
-# answer = (input("Guess the word " + guessed_word + ": > ")).lower()
-# answer = (input("Guess the word " + word_answer + ": > ")).lower()
-# print("That letter doesn't appear in the word")
-# print("attempts", attempts)
-# print("You lost!")
-hangman_version1()
+
+
+# hangman_version1()
+
+
+hangman_version2()
+
