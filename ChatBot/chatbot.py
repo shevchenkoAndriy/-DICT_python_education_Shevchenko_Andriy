@@ -35,7 +35,7 @@ questions = [
         "answers": {
             "option1": "1) toLoverCase()",
             "option2": "2) toLover()",
-            "option3": "3) mb_strtolower()",
+            "option3": "3) mb_strToLower()",
             "option4": "4) lower()",
         },
         "right_answer": 4
@@ -48,7 +48,7 @@ questions = [
             "option3": "3) To compare two values in python use ==",
             "option4": "4) Python is a strongly typed language.",
         },
-        "right_answer": 3
+        "right_answer": 2
     },
 ]
 
@@ -66,9 +66,9 @@ def input_name():
 def age_calc():
     print("Let me guess your age.")
     print("Enter remainders of dividing your age by 3, 5 and 7.")
-    remainder3 = int(input("> "))
-    remainder5 = int(input("> "))
-    remainder7 = int(input("> "))
+    remainder3 = integer_input_validation()
+    remainder5 = integer_input_validation()
+    remainder7 = integer_input_validation()
     age = (remainder3 * 70 + remainder5 * 21 + remainder7 * 15) % 105
     print("Your age isп", age, ";", "that's a good time to start programming!")
 
@@ -76,7 +76,7 @@ def age_calc():
 def number_calc():
     print("Now I will prove to you that I can count to any number you want.")
     i = 0
-    user_number = int(input(">"))
+    user_number = integer_input_validation()
     while i <= user_number:
         print(i, "!")
         i += 1
@@ -93,13 +93,29 @@ def test():
             print(question["answers"]["option2"])
             print(question["answers"]["option3"])
             print(question["answers"]["option4"])
-            answer = int(input("> "))
+            answer = integer_input_validation()
             if answer == question["right_answer"]:
                 print("Completed, have a nice day!")
                 not_pass = False
             else:
                 print("Please, try again.")
                 continue
+    print("Congratulation, have a nice day!")
+
+
+def integer_input_validation():
+    user_input = input("> ")
+    while True:
+        try:
+            int(user_input)
+        except ValueError:
+            print("Please enter an integer number")
+            user_input = input("> ")
+            continue
+        else:
+            break
+
+    return int(user_input)
 
 
 hello("Julia", "2021")
