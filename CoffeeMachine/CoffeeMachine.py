@@ -2,7 +2,7 @@ import math
 
 
 class CoffeeMachine:
-    action = ("buy", "fill", "take")
+    action = ("buy", "fill", "take", "remaining", "exit")
     ingredientsForOne = {"water": 200,
                          "milk": 50,
                          "coffee": 15}
@@ -58,12 +58,12 @@ class CoffeeMachine:
             print(f"No, I can make only {max_cups_coffee} cups of coffee.")
 
     def availability(self):
-        return f"""The coffee machine has:
+        return print(f"""The coffee machine has:
         {self.water} of water
         {self.milk} of milk
         {self.coffee_beans} of coffee beans
         {self.cups} of disposable cups
-        {self.money} of money"""
+        {self.money} of money""")
 
     def calc_max_coffee_cups(self, action_coffee):
         water = self.water
@@ -156,17 +156,15 @@ def correctly_input_command(string, command):
 # cm3.cooking_possibility_check()
 
 
-class CoffeeMachine1 (CoffeeMachine):
+class CoffeeMachine4 (CoffeeMachine):
 
-    def coffee_machine(self):
-        print(self.availability())
+    def coffee_machine4(self):
+        self.availability()
         action = correctly_input_command("Write action (buy, fill, take): > ", self.action)
-        if action == "buy":
-            self.buy_mode()
-        elif action == "fill":
-            self.fill_mode()
-        elif action == "take":
-            self.take_mod()
+        if action == "remaining" or action == "exit":
+            print("This version does not support this feature")
+        self.main_menu(action)
+        self.coffee_machine4()
 
     def enable_purchase_mode(self, action):
         if action == "1":
@@ -188,8 +186,6 @@ class CoffeeMachine1 (CoffeeMachine):
             self.money += 6
 
     def buy_mode(self):
-
-        print(self.availability())
         action = correctly_input_command("What do you want to buy?"
                                          " 1 - espresso, 2 - latte, 3 - cappuccino: > ", ("1", "2", "3",))
         max_cups = self.calc_max_coffee_cups(action)
@@ -197,27 +193,47 @@ class CoffeeMachine1 (CoffeeMachine):
             print("Sorry I don't have enough ingredients")
         elif max_cups >= 1:
             self.enable_purchase_mode(action)
-
-        self.coffee_machine()
+            print("I have enough resources, making you a coffee!")
 
     def fill_mode(self):
         water_add = correct_float_input("Write how many ml of water you want to add: > ")
         milk_add = correct_float_input("Write how many ml of milk you want to add: > ")
         coffee_add = correct_float_input("Write how many grams of coffee beans you want to add: > ")
-        cups_add = correct_float_input("Write how many disposable coffee cups you want to add: > ")
+        cups_add = correct_integer_input("Write how many disposable coffee cups you want to add: > ")
         self.water += water_add
         self.milk += milk_add
         self.coffee_beans += coffee_add
         self.cups += cups_add
-        self.coffee_machine()
 
     def take_mod(self):
         revenue = self.money
         self.money -= revenue
         print(f"I gave you {revenue}")
-        self.coffee_machine()
+
+    def main_menu(self, action):
+        if action == "buy":
+            self.buy_mode()
+        elif action == "fill":
+            self.fill_mode()
+        elif action == "take":
+            self.take_mod()
 
 
-cm3 = CoffeeMachine1(water=400, milk=540, coffee_beans=120, cups=9, money=550)
-cm3.coffee_machine()
+# cm4 = CoffeeMachine4(water=400, milk=540, coffee_beans=120, cups=9, money=550)
+# cm4.coffee_machine4()
 
+
+class CoffeeMachine5 (CoffeeMachine4):
+    def coffee_machine5(self):
+        action = correctly_input_command("Write action (buy, fill, take, remaining, exit): > ", self.action)
+        if action == "remaining":
+            self.availability()
+            self.coffee_machine5()
+        elif action == "exit":
+            return
+        self.main_menu(action)
+        self.coffee_machine5()
+
+
+cm5 = CoffeeMachine5(water=400, milk=540, coffee_beans=120, cups=9, money=550)
+cm5.coffee_machine5()
