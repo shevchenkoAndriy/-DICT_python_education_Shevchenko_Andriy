@@ -30,7 +30,7 @@ class CoffeeMachine:
         print(self.cooking_stages)
 
     def calc_ingredients(self):
-        coffee_amount = correct_integer_input("Write how many cups of coffee you will need: > ")
+        coffee_amount = self.correct_integer_input("Write how many cups of coffee you will need: > ")
         print(f"For {coffee_amount} cups of coffee you will need:")
         water, milk, coffee = self.ingredientsForOne.values()
         print(f'''
@@ -40,14 +40,14 @@ class CoffeeMachine:
         {coffee * coffee_amount} g of coffee beans''')
 
     def cooking_possibility_check(self):
-        water_check = correct_float_input("Write how many ml of water the coffee machine has: > ")
-        milk_check = correct_float_input("Write how many ml of milk the coffee machine has: > ")
-        coffee_check = correct_float_input("Write how many grams of coffee beans the coffee machine has: > ")
+        water_check = self.correct_float_input("Write how many ml of water the coffee machine has: > ")
+        milk_check = self.correct_float_input("Write how many ml of milk the coffee machine has: > ")
+        coffee_check = self.correct_float_input("Write how many grams of coffee beans the coffee machine has: > ")
         water, milk, coffee = self.ingredientsForOne.values()
-        coffee_amount = correct_integer_input("Write how many cups of coffee you will need: > ")
-        max_milk = calc_max_prod(milk_check, milk)
-        max_coffee = calc_max_prod(coffee_check, coffee)
-        max_water = calc_max_prod(water_check, water)
+        coffee_amount = self.correct_integer_input("Write how many cups of coffee you will need: > ")
+        max_milk = self.calc_max_prod(milk_check, milk)
+        max_coffee = self.calc_max_prod(coffee_check, coffee)
+        max_water = self.calc_max_prod(water_check, water)
         max_cups_coffee = min(max_milk, max_coffee, max_water)
         if max_cups_coffee == coffee_amount:
             print("Yes, I can make that amount of coffee")
@@ -66,6 +66,8 @@ class CoffeeMachine:
         {self.money} of money""")
 
     def calc_max_coffee_cups(self, action_coffee):
+        if action_coffee == "back":
+            return action_coffee
         water = self.water
         milk = self.milk
         coffee_beans = self.coffee_beans
@@ -73,9 +75,9 @@ class CoffeeMachine:
         if action_coffee == "1":
             necessary_water = 250
             necessary_coffee_beans = 16
-            max_coffee = calc_max_prod(coffee_beans, necessary_coffee_beans)
+            max_coffee = self.calc_max_prod(coffee_beans, necessary_coffee_beans)
             # print(calc_max_prod(coffee_beans, necessary_coffee_beans))
-            max_water = calc_max_prod(water, necessary_water)
+            max_water = self.calc_max_prod(water, necessary_water)
             # print(min(max_coffee, max_water))
             return min(max_coffee, max_water)
 
@@ -83,65 +85,63 @@ class CoffeeMachine:
             necessary_water = 350
             necessary_milk = 75
             necessary_coffee_beans = 20
-            max_milk = calc_max_prod(milk, necessary_milk)
-            max_coffee = calc_max_prod(coffee_beans, necessary_coffee_beans)
-            max_water = calc_max_prod(water, necessary_water)
-
+            max_milk = self.calc_max_prod(milk, necessary_milk)
+            max_coffee = self.calc_max_prod(coffee_beans, necessary_coffee_beans)
+            max_water = self.calc_max_prod(water, necessary_water)
             return min(max_milk, max_coffee, max_water)
 
         elif action_coffee == "3":
             necessary_water = 200
             necessary_milk = 100
             necessary_coffee_beans = 12
-            max_milk = calc_max_prod(milk, necessary_milk)
-            max_coffee = calc_max_prod(coffee_beans, necessary_coffee_beans)
-            max_water = calc_max_prod(water, necessary_water)
+            max_milk = self.calc_max_prod(milk, necessary_milk)
+            max_coffee = self.calc_max_prod(coffee_beans, necessary_coffee_beans)
+            max_water = self.calc_max_prod(water, necessary_water)
             return min(max_milk, max_coffee, max_water)
 
+    @staticmethod
+    def reload_function(function):
+        function()
 
-"""
-secondary function
-"""
-
-
-def correct_integer_input(string):
-    user_input = input(string)
-    while True:
-        try:
-            int(user_input)
-        except ValueError:
-            print("Please input integer number")
-            user_input = input(string)
-            continue
-        else:
-            break
-    return int(user_input)
-
-
-def correct_float_input(string):
-    user_input = input(string)
-    while True:
-        try:
-            float(user_input)
-        except ValueError:
-            print("Please input number")
-            user_input = input(string)
-            continue
-        else:
-            break
-    return float(user_input)
-
-
-def calc_max_prod(ingredient, ingredients_required_for_one):
-    return math.trunc(ingredient / ingredients_required_for_one)
-
-
-def correctly_input_command(string, command):
-    user_input = input(string)
-    while user_input not in command:
-        print("please input correctly command")
+    @staticmethod
+    def correct_integer_input(string):
         user_input = input(string)
-    return user_input
+        while True:
+            try:
+                int(user_input)
+            except ValueError:
+                print("Please input integer number")
+                user_input = input(string)
+                continue
+            else:
+                break
+        return int(user_input)
+
+    @staticmethod
+    def correct_float_input(string):
+        user_input = input(string)
+        while True:
+            try:
+                float(user_input)
+            except ValueError:
+                print("Please input number")
+                user_input = input(string)
+                continue
+            else:
+                break
+        return float(user_input)
+
+    @staticmethod
+    def calc_max_prod(ingredient, ingredients_required_for_one):
+        return math.trunc(ingredient / ingredients_required_for_one)
+
+    @staticmethod
+    def correctly_input_command(string, command):
+        user_input = input(string)
+        while user_input not in command:
+            print("please input correctly command")
+            user_input = input(string)
+        return user_input
 
 
 # cm1 = CoffeeMachine()
@@ -160,7 +160,7 @@ class CoffeeMachine4 (CoffeeMachine):
 
     def coffee_machine4(self):
         self.availability()
-        action = correctly_input_command("Write action (buy, fill, take): > ", self.action)
+        action = self.correctly_input_command("Write action (buy, fill, take): > ", self.action)
         if action == "remaining" or action == "exit":
             print("This version does not support this feature")
         self.main_menu(action)
@@ -184,11 +184,16 @@ class CoffeeMachine4 (CoffeeMachine):
             self.coffee_beans -= 12
             self.cups -= 1
             self.money += 6
+        elif action == "back":
+            return action
 
     def buy_mode(self):
-        action = correctly_input_command("What do you want to buy?"
-                                         " 1 - espresso, 2 - latte, 3 - cappuccino: > ", ("1", "2", "3",))
+        action = self.correctly_input_command("What do you want to buy?"
+                                              " 1 - espresso, 2 - latte, 3 - cappuccino,"
+                                              " back – to main menu: > ", ("1", "2", "3", "back"))
         max_cups = self.calc_max_coffee_cups(action)
+        if max_cups == "back":
+            return
         if max_cups < 1:
             print("Sorry I don't have enough ingredients")
         elif max_cups >= 1:
@@ -196,10 +201,10 @@ class CoffeeMachine4 (CoffeeMachine):
             print("I have enough resources, making you a coffee!")
 
     def fill_mode(self):
-        water_add = correct_float_input("Write how many ml of water you want to add: > ")
-        milk_add = correct_float_input("Write how many ml of milk you want to add: > ")
-        coffee_add = correct_float_input("Write how many grams of coffee beans you want to add: > ")
-        cups_add = correct_integer_input("Write how many disposable coffee cups you want to add: > ")
+        water_add = self.correct_float_input("Write how many ml of water you want to add: > ")
+        milk_add = self.correct_float_input("Write how many ml of milk you want to add: > ")
+        coffee_add = self.correct_float_input("Write how many grams of coffee beans you want to add: > ")
+        cups_add = self.correct_integer_input("Write how many disposable coffee cups you want to add: > ")
         self.water += water_add
         self.milk += milk_add
         self.coffee_beans += coffee_add
@@ -225,10 +230,9 @@ class CoffeeMachine4 (CoffeeMachine):
 
 class CoffeeMachine5 (CoffeeMachine4):
     def coffee_machine5(self):
-        action = correctly_input_command("Write action (buy, fill, take, remaining, exit): > ", self.action)
+        action = self.correctly_input_command("Write action (buy, fill, take, remaining, exit): > ", self.action)
         if action == "remaining":
             self.availability()
-            self.coffee_machine5()
         elif action == "exit":
             return
         self.main_menu(action)
