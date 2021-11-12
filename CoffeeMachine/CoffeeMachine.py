@@ -201,14 +201,10 @@ class CoffeeMachine4 (CoffeeMachine):
             print("I have enough resources, making you a coffee!")
 
     def fill_mode(self):
-        water_add = self.correct_float_input("Write how many ml of water you want to add: > ")
-        milk_add = self.correct_float_input("Write how many ml of milk you want to add: > ")
-        coffee_add = self.correct_float_input("Write how many grams of coffee beans you want to add: > ")
-        cups_add = self.correct_integer_input("Write how many disposable coffee cups you want to add: > ")
-        self.water += water_add
-        self.milk += milk_add
-        self.coffee_beans += coffee_add
-        self.cups += cups_add
+        selected_command = self.correctly_input_command("What do you want to add?"
+                                                        " (1-water, 2-milk, 3-beans, 4-cups): > ",
+                                                        ("1", "2", "3", "4"))
+        self.fill_menu(selected_command)
 
     def take_mod(self):
         revenue = self.money
@@ -222,6 +218,33 @@ class CoffeeMachine4 (CoffeeMachine):
             self.fill_mode()
         elif action == "take":
             self.take_mod()
+
+    def fill_menu(self, selected_fill):
+        if selected_fill == "1":
+            water_add = self.correct_float_input("Write how many ml of water you want to add: > ")
+            self.water += water_add
+
+        elif selected_fill == "2":
+            milk_add = self.correct_float_input("Write how many ml of milk you want to add: > ")
+            self.milk += milk_add
+
+        elif selected_fill == "3":
+            coffee_add = self.correct_float_input("Write how many grams of coffee beans you want to add: > ")
+            self.coffee_beans = coffee_add
+
+        elif selected_fill == "4":
+            cups_add = self.correct_integer_input("Write how many disposable coffee cups you want to add: > ")
+            self.cups = cups_add
+
+    def fill_coffee_mach(self, selected_command, selected_fill):
+        if selected_command == "1":
+            self.water += selected_fill
+        elif selected_command == "2":
+            self.milk += selected_fill
+        elif selected_command == "3":
+            self.coffee_beans += selected_fill
+        elif selected_command == "4":
+            self.cups += selected_fill
 
 
 # cm4 = CoffeeMachine4(water=400, milk=540, coffee_beans=120, cups=9, money=550)
