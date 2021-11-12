@@ -230,11 +230,11 @@ class CoffeeMachine4 (CoffeeMachine):
 
         elif selected_fill == "3":
             coffee_add = self.correct_float_input("Write how many grams of coffee beans you want to add: > ")
-            self.coffee_beans = coffee_add
+            self.coffee_beans += coffee_add
 
         elif selected_fill == "4":
             cups_add = self.correct_integer_input("Write how many disposable coffee cups you want to add: > ")
-            self.cups = cups_add
+            self.cups += cups_add
 
     def fill_coffee_mach(self, selected_command, selected_fill):
         if selected_command == "1":
