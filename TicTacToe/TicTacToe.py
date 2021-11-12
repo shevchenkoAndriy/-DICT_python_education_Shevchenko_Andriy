@@ -17,9 +17,9 @@ class TicTacToe:
     def input_cells(self):
         user_input = list(input("Enter cells: > ").upper())
         if len(user_input) != 9:
-            print("Can't build a board, you need 9 characters")
+            print("Error:\nCan't build a board, you need 9 characters")
         valid_input = self.correctly_input_cells(user_input)
-        if valid_input == 9:
+        if valid_input and user_input != 9:
             field = [user_input[:3],
                      user_input[3:6],
                      user_input[6:9]]
