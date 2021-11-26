@@ -11,6 +11,10 @@ class TicTacToe:
         self.board = []
         self.test_string = [["X", 0, 0], ["X", 0, "X"], ["X", "X", 0]]
         self.available_symbols = ("X", "0", "_")
+        self.player1 = "X"
+        self.player2 = "0"
+        self.select_player = "0"
+        self.error = None
 
     def create_board(self):
         for i in range(3):
@@ -24,6 +28,7 @@ class TicTacToe:
         user_input = list(input("Enter cells: > ").upper())
         if len(user_input) != 9:
             print("Can't build a board, you need 9 characters")
+            self.input_cells()
             return
         has_valid_input = self.correctly_input_cells(user_input)
         if has_valid_input:
@@ -33,7 +38,8 @@ class TicTacToe:
             self.print_board(field)
             self.board = field
             return field
-        # self.input_cells()
+        else:
+            self.input_cells()
 
     def board_analysis(self):
         game_board = self.input_cells()
@@ -54,16 +60,57 @@ class TicTacToe:
             print('Game not finished')
         else:
             print("Draw")
+        # self.board_analysis()
+
+    def analysis_game(self):
+        exception = self.check_impossible(self.board)
+        win = self.check_winner(self.board)
+        if win == "Impossible" or exception:
+            return "Impossible"
+        elif win == "XXX":
+            return "X wins"
+        elif win == "000":
+            return "0 wins"
+        elif not exception and "_" in itertools.chain.from_iterable(self.board):
+            return False
+        else:
+            return "Draw"
 
     def move_player(self, player):
         moves = self.correct_input_move("Enter the coordinates: ", self.command_move)
         coordinates = (list(map(self.replace_num, moves.split(" "))))
-        self.board[coordinates[0]][coordinates[1]] = player
-
-        if self.board[coordinates[0]][coordinates[1]] != "_":
+        if self.board[coordinates[0]][coordinates[1]] != "_" and\
+                self.board[coordinates[0]][coordinates[1]] == "X" or \
+                self.board[coordinates[0]][coordinates[1]] == "0":
             print("This cell is occupied! Choose another one!")
-        self.print_board(self.board)
-        self.move_player("X")
+            return True
+        else:
+            self.board[coordinates[0]][coordinates[1]] = player
+        # self.print_board(self.board)
+        # self.move_player(player)
+
+    def start(self):
+        self.create_board()
+        self.select_player = self.player2
+        finished = self.analysis_game()
+        while not finished:
+            self.print_board(self.board)
+            if self.select_player == self.player2 and not self.error:
+                self.select_player = self.player1
+                self.error = self.move_player(self.select_player)
+            elif self.select_player == self.player1 and not self.error:
+                self.select_player = self.player2
+                self.error = self.move_player(self.select_player)
+            else:
+                self.error = None
+                self.error = self.move_player(self.select_player)
+            finished = self.analysis_game()
+            if finished:
+                self.print_board(self.board)
+                print(finished)
+            continue
+        self.board = []
+        self.start()
 
     @staticmethod
     def replace_num(move):
@@ -180,6 +227,10 @@ class TicTacToe:
 
 """
 
-st4 = TicTacToe()
-st4.board_analysis()
-st4.move_player("X")
+# st4 = TicTacToe()
+# st4.board_analysis()
+# st4.move_player("X")
+# st4.print_board(st4.board)
+
+st5 = TicTacToe()
+st5.start()
