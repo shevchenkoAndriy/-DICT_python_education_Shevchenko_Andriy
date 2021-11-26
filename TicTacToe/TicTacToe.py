@@ -3,6 +3,9 @@ import itertools
 
 class TicTacToe:
     init_list = []
+    command_move = "1 1", "1 2", "1 3",\
+                   "2 1", "2 2", "2 3",\
+                   "3 1", "3 2", "3 3"
 
     def __init__(self):
         self.board = []
@@ -28,11 +31,15 @@ class TicTacToe:
                      user_input[3:6],
                      user_input[6:9]]
             self.print_board(field)
+            self.board = field
             return field
-        self.input_cells()
+        # self.input_cells()
 
     def board_analysis(self):
         game_board = self.input_cells()
+        if not game_board:
+            while not game_board:
+                self.board_analysis()
         exception = self.check_impossible(game_board)
         if not game_board:
             self.board_analysis()
@@ -47,6 +54,40 @@ class TicTacToe:
             print('Game not finished')
         else:
             print("Draw")
+
+    def move_player(self, player):
+        moves = self.correct_input_move("Enter the coordinates: ", self.command_move)
+        coordinates = (list(map(self.replace_num, moves.split(" "))))
+        self.board[coordinates[0]][coordinates[1]] = player
+
+        if self.board[coordinates[0]][coordinates[1]] != "_":
+            print("This cell is occupied! Choose another one!")
+        self.print_board(self.board)
+        self.move_player("X")
+
+    @staticmethod
+    def replace_num(move):
+        if move == "1":
+            move = 0
+        elif move == "2":
+            move = 1
+        elif move == "3":
+            move = 2
+        return move
+
+    @staticmethod
+    def correct_input_move(help_string, valid_move):
+        move = input(help_string)
+        while move not in valid_move:
+            if not move.replace(" ", "").isnumeric():
+                print("You should enter numbers!")
+                move = input(help_string)
+                continue
+            elif move not in valid_move:
+                print("Coordinates should be from 1 to 3!")
+                move = input(help_string)
+                continue
+        return move
 
     @staticmethod
     def check_impossible(board):
@@ -115,13 +156,6 @@ class TicTacToe:
         elif len(used_combo) > 1:
             return "Impossible"
 
-    # @staticmethod
-    # def correct(items):
-    #     if items not in ("X", "0", "_"):
-    #         return True
-    #     else:
-    #         return False
-
 
 # st1 = TicTacToe()
 # st1.print_board(st1.test_string)
@@ -131,11 +165,21 @@ class TicTacToe:
 # st2.input_cells()
 
 
-st3 = TicTacToe()
-st3.board_analysis()
+# st3 = TicTacToe()
+# st3.board_analysis()
 """
    000xx0x0x - 0 wins; xx00xxx00 - draw;
    00x0x0x__ - X wins; xxx000xxx - impossible;
    x0x_x_x00 - X wins; 0x0_xx00x - not finished
    
 """
+"""
+   00_xx0x0x ; xx0__xx00 
+   __x0x0x__ ; _xx0__xxx 
+   _0x_x_x00 ; 0x0_x_0_x 
+
+"""
+
+st4 = TicTacToe()
+st4.board_analysis()
+st4.move_player("X")
