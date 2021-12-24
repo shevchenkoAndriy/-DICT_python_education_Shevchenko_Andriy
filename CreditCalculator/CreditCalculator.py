@@ -11,7 +11,7 @@ class CreditCalculator:
         self.loan_principal = 0
         self.loan_interest = 0
         self.periods_count = 0
-        # self.error = ""
+        self.overpayment = ""
 
     test_string = """
     Loan principal: 1000
@@ -28,6 +28,7 @@ class CreditCalculator:
         self.loan_principal = {self.loan_principal} 
         self.periods_count = {self.periods_count} 
         self.loan_interest = {self.loan_interest} 
+        self.overpayment = {self.overpayment}
         """)
 
     def print_status(self):
@@ -52,8 +53,14 @@ class CreditCalculator:
         self.loan_principal = parameters.principal
         self.periods_count = parameters.periods
         self.loan_interest = parameters.interest
+        self.overpayment = parameters.overpayment
 
     def is_incorrect_parameters(self):
+        if not self.overpayment:
+            return
+        if self.overpayment != "show":
+            if self.overpayment != "hide":
+                return
         if self.type != "annuity" and self.type != "diff":
             return
         elif self.type == "diff" and self.monthly_payment:
@@ -84,13 +91,16 @@ class CreditCalculator:
         if self.loan_principal and self.monthly_payment and self.loan_interest:
             periods_count = self.calc_monthly_payment_number(self.loan_principal,
                                                              self.monthly_payment, self.loan_interest)
-            self.calc_overpayment(periods_count, self.monthly_payment, self.loan_principal)
+            if self.overpayment == "show":
+                self.calc_overpayment(periods_count, self.monthly_payment, self.loan_principal)
         elif self.loan_principal and self.periods_count and self.loan_interest:
             annuity_payment = self.calc_annuity_payment(self.loan_principal, self.periods_count, self.loan_interest)
-            self.calc_overpayment(annuity_payment, self.periods_count, self.loan_principal)
+            if self.overpayment == "show":
+                self.calc_overpayment(annuity_payment, self.periods_count, self.loan_principal)
         elif self.monthly_payment and self.periods_count and self.loan_interest:
             loan_principal = self.calc_loan_principal(self.monthly_payment, self.periods_count, self.loan_interest)
-            self.calc_overpayment(self.monthly_payment, self.periods_count, loan_principal)
+            if self.overpayment == "show":
+                self.calc_overpayment(self.monthly_payment, self.periods_count, loan_principal)
 
     def calc_diff_credit(self):
         nominal_rate = self.calc_nominal_rate(self.loan_interest)
@@ -100,7 +110,8 @@ class CreditCalculator:
                                     (self.loan_principal - ((self.loan_principal * (count - 1)) / self.periods_count)))
             overpayment += dif_payment - self.loan_principal // self.periods_count
             print(f"Month {count}: payment is {dif_payment}")
-        print(f"\nOverpayment = {math.ceil(overpayment)}")
+        if self.overpayment == "show":
+            print(f"\nOverpayment = {math.ceil(overpayment)}")
 
     def credit_input_version(self):
         mod = self.correctly_input_command('What do you want to calculate?\n'
@@ -255,11 +266,12 @@ class CreditCalculator:
         parser.add_argument('--principal', type=float)
         parser.add_argument('--periods', type=float)
         parser.add_argument('--interest', type=float)
+        parser.add_argument('--overpayment', type=str)
         return parser.parse_args()
 
     @staticmethod
     def calc_overpayment(factor1, factor2, minuend):
-        print(f"{math.ceil((factor1 * factor2) - minuend)}")
+        print(f"Overpayment {math.ceil((factor1 * factor2) - minuend)}")
 
 
 calc = CreditCalculator()
@@ -270,16 +282,23 @@ calc = CreditCalculator()
 """3-st"""
 # calc.credit_input_version()
 """ 
-    python3.10 CreditCalculator/CreditCalculator.py --type=annuity --principal=1000000 --periods=60 --interest=10
-    python3.10 CreditCalculator/CreditCalculator.py --type=diff --principal=1000000 --periods=10 --interest=10
+    python3.10 CreditCalculator/CreditCalculator.py --type=annuity --principal=1000000 --periods=60 --interest=10 
+    --overpayment="hide"
+    python3.10 CreditCalculator/CreditCalculator.py --type=diff --principal=1000000 --periods=10 --interest=10 
+    --overpayment="show"
     python3.10 CreditCalculator/CreditCalculator.py --type=annuity --payment=8722 --periods=120 --interest=5.6
+     --overpayment="show"
     python3.10 CreditCalculator/CreditCalculator.py --type=annuity --principal=500000 --payment=23000 --interest=7.8
+     --overpayment="show"
     errors setting:
-    python3.10 CreditCalculator/CreditCalculator.py --principal=1000000 --periods=60 --interest=10
+    python3.10 CreditCalculator/CreditCalculator.py --principal=1000000 --periods=60 --interest=10 --overpayment="show"
     python3.10 CreditCalculator/CreditCalculator.py --type=diff --principal=1000000 --interest=10 --payment=100000
+     --overpayment="show"
     python3.10 CreditCalculator/CreditCalculator.py --type=annuity --principal=100000 --payment=10400 --periods=8
     python3.10 CreditCalculator/CreditCalculator.py --type=annuity --principal=1000000 --payment=104000
+     --overpayment="show"
     python3.10 CreditCalculator/CreditCalculator.py --type=diff --principal=30000 --periods=-14 --interest=10
+     --overpayment="show"
 
    """
 calc.loan_calc_mode_selection()
