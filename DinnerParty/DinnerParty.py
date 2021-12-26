@@ -1,3 +1,6 @@
+import random
+
+
 invalid_symbols = ".,/';[]}{!~`@#$%^&*-_№?+= "
 
 
@@ -10,6 +13,23 @@ def step2():
     friends_list = add_friends_list()
     discount_for = split_bill_equally(len(friends_list))
     print(create_dict(friends_list, discount_for))
+
+
+def step3():
+    friends_list = add_friends_list()
+    add_feature_lucky(friends_list)
+
+
+def add_feature_lucky(friends):
+    selected = correctly_input_command("Do you want to use the"
+                                       " \"Who is lucky?\" feature? Write Yes/No: > ", ("yes", "no"))
+
+    if selected == "no":
+        lucky = None
+        print("No one is going to be lucky")
+    else:
+        lucky = selecting_lucky(friends)
+    return lucky
 
 
 def correct_integer_input(string):
@@ -57,23 +77,23 @@ def correct_input_name(invited_friends):
     while True:
         if friend in invited_friends:
             print(f"{friend} has already been invited to dinner.")
-            friend = input("Enter the name of every friend (including you), each on a new line:\n>")
+            friend = input("> ")
             continue
         elif not friend:
             print("Name cannot be empty")
-            friend = input("Enter the name of every friend (including you), each on a new line:\n>")
+            friend = input("> ")
         elif friend.isnumeric():
             print("Please input name and not a number")
-            friend = input("Enter the name of every friend (including you), each on a new line:\n>")
+            friend = input("> ")
         elif friend[0].isnumeric():
             print("Name cannot start with a number")
-            friend = input("Enter the name of every friend (including you), each on a new line:\n>")
+            friend = input("> ")
         elif friend[0] in invalid_symbols:
             print(f"Name cannot start with \"{list(filter(lambda x: x == friend[0], invalid_symbols))[0]}\"")
-            friend = input("Enter the name of every friend (including you), each on a new line:\n>")
+            friend = input("> ")
         elif len(friend) < 2:
             print(f"This name is too short")
-            friend = input("Enter the name of every friend (including you), each on a new line:\n>")
+            friend = input("> ")
         else:
             invited_friends.append(friend)
             friend = f"{friend[0].upper() + friend[1:]}"
@@ -81,5 +101,20 @@ def correct_input_name(invited_friends):
     return friend
 
 
+def correctly_input_command(string, command):
+    user_input = input(string)
+    while user_input not in command:
+        print("please input correctly command")
+        user_input = input(string)
+    return user_input
+
+
+def selecting_lucky(friends):
+    random_friend = random.choice(friends)
+    print(f"{random_friend} is the lucky one!")
+    return random_friend
+
+
 # step1()
-step2()
+# step2()
+step3()
