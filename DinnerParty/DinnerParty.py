@@ -20,6 +20,21 @@ def step3():
     add_feature_lucky(friends_list)
 
 
+def step4():
+    not_paying = 1
+    paying_friends = add_friends_list()
+    lucky = add_feature_lucky(paying_friends)
+
+    if not lucky:
+        not_paying = 0
+
+    discount_for = split_bill_equally(len(paying_friends) - not_paying)
+    friends = create_dict(paying_friends, discount_for)
+    if lucky:
+        friends[lucky] = 0
+    print(friends)
+
+
 def add_feature_lucky(friends):
     selected = correctly_input_command("Do you want to use the"
                                        " \"Who is lucky?\" feature? Write Yes/No: > ", ("yes", "no"))
@@ -117,4 +132,5 @@ def selecting_lucky(friends):
 
 # step1()
 # step2()
-step3()
+# step3()
+step4()
