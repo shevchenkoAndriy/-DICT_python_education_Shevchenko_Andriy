@@ -35,10 +35,20 @@ def step4():
     print(friends)
 
 
+def additional_task():
+    friends_list = add_friends_list()
+    total_amount = correct_integer_input("Enter the total amount: > ")
+    discount_for = round((total_amount / len(friends_list)), 2)
+    bonus = add_feature_bonuses(friends_list)
+    payment_with_bonuses = total_amount - bonus
+    discount_with_bonuses = round((payment_with_bonuses / len(friends_list)), 2)
+    print(create_dict(friends_list, discount_with_bonuses))
+    print(f"We paid {round(discount_for - discount_with_bonuses, 2)} less")
+
+
 def add_feature_lucky(friends):
     selected = correctly_input_command("Do you want to use the"
                                        " \"Who is lucky?\" feature? Write Yes/No: > ", ("yes", "no"))
-
     if selected == "no":
         lucky = None
         print("No one is going to be lucky")
@@ -51,7 +61,7 @@ def correct_integer_input(string):
     user_input = input(string)
     while True:
         try:
-            int(float(user_input))
+            int(user_input)
         except ValueError:
             print("Please input number")
             user_input = input(string)
@@ -59,6 +69,8 @@ def correct_integer_input(string):
         user_input = int(user_input)
         if user_input == 0 or user_input < 0:
             print("No one is joining for the party.")
+            user_input = input(string)
+            continue
         else:
             break
     return user_input
@@ -85,6 +97,27 @@ def create_dict(friends, count):
     for friend in friends:
         friends_to_party[friend] = count
     return friends_to_party
+
+
+def add_feature_bonuses(friends):
+    has_bonus = True
+    total_bonus = 0
+    friend = input("Waiter: Does anyone have bonuses? > ")
+    while has_bonus:
+        if friend == "no":
+            print(f"Ok, we have {total_bonus} bonuses")
+            break
+        elif friend[0].upper() + friend[1:] not in friends:
+            print(f"{friend} is not your friend")
+            friend = input("Waiter: Does anyone have bonuses? > ")
+            continue
+        else:
+            print(f"{friend[0].upper() + friend[1:]}: Yes, I have")
+            bonus = correct_integer_input("Waiter: How many bonuses do you have? > ")
+            total_bonus += bonus
+            friend = input("Waiter: Does anyone else have bonuses? > ")
+            continue
+    return total_bonus
 
 
 def correct_input_name(invited_friends):
@@ -133,4 +166,5 @@ def selecting_lucky(friends):
 # step1()
 # step2()
 # step3()
-step4()
+# step4()
+additional_task()
