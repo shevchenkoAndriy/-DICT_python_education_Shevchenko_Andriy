@@ -68,7 +68,7 @@ Hi, this App will help you add Markdown markup through the console.
             self.menu_options()
 
         elif option == "!done":
-
+            self.add_markup(self.content)
             return
 
         elif option == "plain":
@@ -172,6 +172,14 @@ Hi, this App will help you add Markdown markup through the console.
 
         return user_input
 
+    @staticmethod
+    def add_markup(content):
+        file = open("output.md", "w")
+        file.write(content)
+        file.close()
+        print("Save successfully")
+
 
 mde = MarkdownEditor()
-# mde.menu_options()
+mde.menu_options()
+# mde.add_markup(mde.test_string)
