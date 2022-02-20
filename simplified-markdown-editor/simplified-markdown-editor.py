@@ -83,7 +83,7 @@ class MarkdownEditor:
         elif option == "unordered-list":
             ...
         elif option == "new-line":
-            self.content += "\n"
+            self.content += "  \n"
             print(self.content)
             self.menu_options()
             ...
