@@ -1,0 +1,13 @@
+Index: arithmetic_test/results.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>Andrey:5/5 in 2 (integral squares of 11-29).
+===================================================================
+diff --git a/arithmetic_test/results.txt b/arithmetic_test/results.txt
+--- a/arithmetic_test/results.txt	
++++ b/arithmetic_test/results.txt	
+@@ -1,1 +1,1 @@
+-Andrey:5/5 in 2 (integral squares of 11-29).
+\ No newline at end of file
++ANDREY: 4/5 in 1 (simple operations with numbers 2-9).
+\ No newline at end of file

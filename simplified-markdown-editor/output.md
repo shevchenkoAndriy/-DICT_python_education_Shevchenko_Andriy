@@ -8,16 +8,18 @@ Hi, this App will help you add Markdown markup through the console.
 
 ## Usage example
 
-```if option == "ordered-list":```   
-1. plain  
-2. bold  
-3. italic  
-4. header  
-5. link  
-6. inline-code  
-7. ordered-list  
-8. unordered-list  
-9. new-line  
+```if option == "ordered-list":```
+1. text option   
+    1.1 plain  
+    1.2 bold  
+    1.3 italic  
+2. header  
+3. link  
+4. inline-code
+5. list option  
+    * ordered-list  
+    * unordered-list  
+6. new-line  
   
 ```if option == "unordered-list":```  
 * !help  
