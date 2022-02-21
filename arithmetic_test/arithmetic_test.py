@@ -105,15 +105,18 @@ def test_menu():
                       )
 
 
-def save_progress(name, progress, mod):
+def define_mod(mod):
     selected_mod = mod
     if selected_mod == "1":
-        selected_mod = "1 (simple operations with numbers 2-9)."
+        return "1 (simple operations with numbers 2-9)."
     elif selected_mod == "2":
-        selected_mod = "2 (integral squares of 11-29)."
+        return "2 (integral squares of 11-29)."
 
-    file_result = open("results.txt", "w")
-    file_result.write(f"{name}: {progress} in {selected_mod}")
+
+def save_progress(name, progress, mod):
+    selected_mod = define_mod(mod)
+    file_result = open("results.txt", "a")
+    file_result.write(f"{name}: {progress} in {selected_mod}\n")
     file_result.close()
 
 
