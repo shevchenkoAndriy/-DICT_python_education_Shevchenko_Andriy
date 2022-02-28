@@ -12,7 +12,7 @@ Your choice: > """, ("1", "2", "3", "0"))
         if user_choice == "1":
             self.add_matrices()
         elif user_choice == "2":
-            ...
+            self.multiplication_by_constant()
         elif user_choice == "3":
             ...
         elif user_choice == "0":
@@ -23,6 +23,17 @@ Your choice: > """, ("1", "2", "3", "0"))
             self.menu()
         else:
             return
+
+    def multiplication_by_constant(self):
+        constant = self.correct_integer_input("Enter constant: > ")
+        matrix, *_ = self.create_matrix()
+        result = []
+        for rows in matrix:
+            columns = []
+            for column in rows:
+                columns.append(column * constant)
+            result.append(columns)
+        self.show_result(result)
 
     def add_matrices(self):
         matrix1, *shape1 = self.create_matrix(" first ")
@@ -117,6 +128,20 @@ Your choice: > """, ("1", "2", "3", "0"))
                 break
 
         return user_input
+
+    @staticmethod
+    def correct_integer_input(string):
+        user_input = input(string)
+        while True:
+            try:
+                int(user_input)
+            except ValueError:
+                print("Incorrect format")
+                user_input = input(string)
+                continue
+            else:
+                break
+        return int(user_input)
 
 
 mxp = MatrixProcessing()
