@@ -14,7 +14,7 @@ Your choice: > """, ("1", "2", "3", "0"))
         elif user_choice == "2":
             self.multiplication_by_constant()
         elif user_choice == "3":
-            ...
+            self.multiply_matrices()
         elif user_choice == "0":
             return
 
@@ -24,8 +24,28 @@ Your choice: > """, ("1", "2", "3", "0"))
         else:
             return
 
+    def multiply_matrices(self):
+        matrix1, rows1, columns1 = self.create_matrix(" first ")
+        matrix2, rows2, columns2 = self.create_matrix(" second ")
+        while rows1 != columns2:
+            print("The number of columns"
+                  " of the first matrix must"
+                  " be equal to the number of rows of"
+                  " the second matrix")
+            matrix2, rows2, columns2 = self.create_matrix(" second ")
+        result = []
+        for i in range(rows1):
+            row = []
+            for j in range(columns2):
+                num = 0
+                for k in range(columns1):
+                    num += matrix1[i][k] * matrix2[k][j]
+                row.append(num)
+            result.append(row)
+        self.show_result(result)
+
     def multiplication_by_constant(self):
-        constant = self.correct_integer_input("Enter constant: > ")
+        constant = self.correct_float_input("Enter constant: > ")
         matrix, *_ = self.create_matrix()
         result = []
         for rows in matrix:
@@ -68,7 +88,13 @@ Your choice: > """, ("1", "2", "3", "0"))
     def show_result(matrix):
         print("The result is:")
         for rows in matrix:
-            print(*rows, sep="  ")
+            results = []
+            for column in rows:
+                value = round(column, 2)
+                if int(column) == column:
+                    value = int(column)
+                results.append(value)
+            print(*results, sep="  ")
 
     @staticmethod
     def correct_input_columns(string, number_rows):
@@ -79,13 +105,13 @@ Your choice: > """, ("1", "2", "3", "0"))
                 print("Incorrect row filling")
                 user_input = input(string)
             try:
-                list(map(lambda x: int(x), user_input))
+                list(map(lambda x: float(x), user_input))
             except ValueError:
                 print("Incorrect row filling")
                 user_input = input(string)
                 continue
             else:
-                user_input = list(map(lambda x: int(x), user_input))
+                user_input = list(map(lambda x: float(x), user_input))
                 break
         return user_input
 
@@ -130,18 +156,18 @@ Your choice: > """, ("1", "2", "3", "0"))
         return user_input
 
     @staticmethod
-    def correct_integer_input(string):
+    def correct_float_input(string):
         user_input = input(string)
         while True:
             try:
-                int(user_input)
+                float(user_input)
             except ValueError:
                 print("Incorrect format")
                 user_input = input(string)
                 continue
             else:
                 break
-        return int(user_input)
+        return float(user_input)
 
 
 mxp = MatrixProcessing()
