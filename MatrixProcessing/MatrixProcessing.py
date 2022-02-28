@@ -7,14 +7,17 @@ class MatrixProcessing:
         user_choice = self.correctly_input_command("""1. Add matrices
 2. Multiply matrix by a constant
 3. Multiply matrices
+4. Transpose matrix
 0. Exit
-Your choice: > """, ("1", "2", "3", "0"))
+Your choice: > """, ("1", "2", "3", "0", "4"))
         if user_choice == "1":
             self.add_matrices()
         elif user_choice == "2":
             self.multiplication_by_constant()
         elif user_choice == "3":
             self.multiply_matrices()
+        elif user_choice == "4":
+            self.matrix_transposition()
         elif user_choice == "0":
             return
 
@@ -83,6 +86,17 @@ Your choice: > """, ("1", "2", "3", "0"))
             row = self.correct_input_columns(f"Row number {i}: > ", columns)
             matrix.append(row)
         return matrix
+
+    def matrix_transposition(self):
+        matrix, *_ = self.create_matrix()
+        result = []
+        for i in range(len(matrix[0])):
+            rows = []
+            for row in matrix:
+                rows.append(row[i])
+            result.append(rows)
+
+        self.show_result(result)
 
     @staticmethod
     def show_result(matrix):
