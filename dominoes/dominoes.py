@@ -45,9 +45,28 @@ Player pieces: {self.player_pieces}
 Domino snake: {self.domino_snake}
 Status: {self.status}""")
 
+    def domino_interface(self):
+        print(f"""{"=" * 70}
+Stock size: {len(self.stock_pieces)}
+Computer pieces: {len(self.computer_pieces)}
+""")
+        print(*self.domino_snake, sep="")
+        print("\nYour pieces:")
+        pieces_range = range(len(self.player_pieces))
+        for item, i in zip(self.player_pieces, pieces_range):
+            print(f"{i+1}: {item}")
+        if self.status == "Player":
+            print("\nStatus: It's your turn to make a move. Enter your command.")
+        elif self.status == "Computer":
+            print("\nStatus: Computer is about to make a move. Press Enter to continue...")
+
     def step_1(self):
         self.init_game()
         self.show_filed()
+
+    def step_2(self):
+        self.init_game()
+        self.domino_interface()
 
     def init_game(self):
         self.player_pieces = sample(self.game_dice, k=7)
@@ -73,4 +92,5 @@ Status: {self.status}""")
 
 
 dominoes = Dominoes()
-dominoes.step_1()
+# dominoes.step_1()
+dominoes.step_2()
