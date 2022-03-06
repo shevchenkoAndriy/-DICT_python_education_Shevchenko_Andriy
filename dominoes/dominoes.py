@@ -63,7 +63,7 @@ class Dominoes:
             action = self.correct_input_action('Add ahead press enter or '
                                                'input "back" to add back > ',
                                                ("", "back"))
-        else:
+        elif action == "universal" and user == "computer":
             action = "append"
 
         if action == "append" and move[1] == last_number_snake:
@@ -96,8 +96,8 @@ Computer pieces: {self.computer_pieces}
 
 Player pieces: {self.player_pieces}
 
-Domino snake: {self.domino_snake[:17] if len(self.domino_snake) >= 16 else self.domino_snake}
-              {self.domino_snake[17:] if len(self.domino_snake) > 16 else ""}              
+Domino snake: {self.domino_snake[:14] if len(self.domino_snake) >= 14 else self.domino_snake}
+              {self.domino_snake[14:] if len(self.domino_snake) > 14 else ""}              
 Status: {self.status}""")
 
     def domino_interface(self):
@@ -132,6 +132,7 @@ Computer pieces: {len(self.computer_pieces)}
         user_pieces = user_dice
         valid_commands = None
         while len(self.stock_pieces) != 0:
+            print(f"{self.status}: Oops, i'm going to the market")
             self.correct_enter_input("Please press Enter to continue > ")
             new_dice = self.get_dice()
             user_pieces.append(new_dice)
@@ -151,11 +152,10 @@ Computer pieces: {len(self.computer_pieces)}
 
     def is_have_choice(self, user_pieces):
         valid_commands = self.search_move_option(user_pieces)
-        if len(self.stock_pieces) < 1:
-            return
-        elif len(valid_commands) < 1:
-            print("Oops, i'm going to the market")
-            return self.go_to_shop(user_pieces)
+        if len(valid_commands) == 0:
+            valid_commands = self.go_to_shop(user_pieces)
+            self.domino_interface()
+            return valid_commands
         else:
             return valid_commands
 
@@ -179,21 +179,24 @@ Computer pieces: {len(self.computer_pieces)}
         self.make_move(self.computer_pieces[valid_commands[0] - 1])
 
     def search_move_option(self, user_pieces):
-        domino_snake = self.domino_snake
         possible_moves = []
-        necessary = []
-        if len(domino_snake) == 1:
-            necessary.append(domino_snake[0][0])
-        else:
-            necessary.append(domino_snake[0][0])
-            necessary.append(domino_snake[len(domino_snake) - 1][1])
-
+        necessary = self.find_necessary_pieces()
         possible_pieces = list(filter(lambda x: self.find(x, necessary), user_pieces))
         for i in range(len(user_pieces)):
             if user_pieces[i] in possible_pieces:
                 possible_moves.append(i+1)
 
         return possible_moves
+
+    def find_necessary_pieces(self):
+        domino_snake = self.domino_snake
+        necessary = []
+        if len(domino_snake) == 1:
+            necessary.append(domino_snake[0][0])
+        else:
+            necessary.append(domino_snake[0][0])
+            necessary.append(domino_snake[len(domino_snake) - 1][1])
+        return necessary
 
     def correctly_integer_input(self, string):
         user_input = input(string)
@@ -222,11 +225,13 @@ Computer pieces: {len(self.computer_pieces)}
 
     def step_3(self):
         self.init_game()
-        while not self.is_need_break():
+        need_stop = False
+        while not need_stop:
             self.domino_interface()
             self.start_game()
+            need_stop = self.is_need_break()
 
-        self.status = self.is_need_break()
+        self.status = need_stop
         self.show_filed()
 
     def is_need_break(self):
@@ -239,10 +244,13 @@ Computer pieces: {len(self.computer_pieces)}
             return "Fish"
 
     def it_is_fish(self):
-        for i in range(7):
-            pieces = list(filter(lambda x: self.find(x, [i]), self.domino_snake))
-            if len(pieces) == 7:
-                return True
+        pieces = self.find_necessary_pieces()
+        user_option = list(filter(lambda x: self.find(x, pieces), self.player_pieces))
+        computer_option = list(filter(lambda x: self.find(x, pieces), self.computer_pieces))
+        stock_option = list(filter(lambda x: self.find(x, pieces), self.stock_pieces))
+        print(f"u: {user_option} c: {computer_option}, store: {stock_option}")
+        if len(user_option) == 0 and len(computer_option) == 0 and len(stock_option) == 0:
+            return True
 
     def init_game(self):
         self.player_pieces = sample(self.game_dice, k=7)
