@@ -112,7 +112,7 @@
       <workItem from="1646397421720" duration="3164000" />
       <workItem from="1646401316085" duration="16087000" />
       <workItem from="1646480538320" duration="29831000" />
-      <workItem from="1646570184345" duration="10472000" />
+      <workItem from="1646570184345" duration="27892000" />
     </task>
     <servers />
   </component>
@@ -132,7 +132,7 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/_DICT_python_education_Shevchenko_Andriy$arithmetic_test.coverage" NAME="arithmetic_test Coverage Results" MODIFIED="1645451087378" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/arithmetic_test" />
-    <SUITE FILE_PATH="coverage/_DICT_python_education_Shevchenko_Andriy$dominoes.coverage" NAME="dominoes Coverage Results" MODIFIED="1646580702100" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dominoes" />
+    <SUITE FILE_PATH="coverage/_DICT_python_education_Shevchenko_Andriy$dominoes.coverage" NAME="dominoes Coverage Results" MODIFIED="1646600613629" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dominoes" />
     <SUITE FILE_PATH="coverage/_DICT_python_education_Shevchenko_Andriy$simplified_markdown_editor.coverage" NAME="simplified-markdown-editor Coverage Results" MODIFIED="1645480272283" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/simplified-markdown-editor" />
     <SUITE FILE_PATH="coverage/_DICT_python_education_Shevchenko_Andriy$MatrixProcessing.coverage" NAME="MatrixProcessing Coverage Results" MODIFIED="1646072670341" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/MatrixProcessing" />
   </component>

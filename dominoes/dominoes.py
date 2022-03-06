@@ -1,11 +1,14 @@
 from random import sample
+from operator import itemgetter
 
 
 class Dominoes:
     def __init__(self):
         self.game_dice = [[a, b] for a in range(7) for b in range(a, 7)]
         self.player_pieces = None
+        self.player_not_have = []
         self.computer_pieces = None
+        self.computer_not_have = []
         self.stock_pieces = None
         self.status = None
         self.domino_snake = []
@@ -64,7 +67,7 @@ class Dominoes:
                                                'input "back" to add back > ',
                                                ("", "back"))
         elif action == "universal" and user == "computer":
-            action = "append"
+            action = will_go_to_store()
 
         if action == "append" and move[1] == last_number_snake:
             move = list(reversed(move))
@@ -77,6 +80,13 @@ class Dominoes:
 
         if action == "insert":
             self.domino_snake.insert(0, move)
+
+    def will_go_to_store(self, move):
+        if move[0] in self.player_not_have\
+                or move[1] in self.player_not_have:
+            return "insert"
+        else:
+            return "append"
 
     def who_starts_game(self):
         max_double_player, pieces_player = self.get_max_double(self.player_pieces)
@@ -128,11 +138,27 @@ Computer pieces: {len(self.computer_pieces)}
         elif self.status == "Computer":
             self.computer_action()
 
+    def check_what_user_need(self):
+        if len(self.domino_snake) <= 1:
+            return
+
+        first = self.domino_snake[0][0]
+        last = self.domino_snake[len(self.domino_snake) - 1][1]
+
+        if self.status == "Player":
+            if last == first:
+                self.player_not_have.append(first)
+                return
+            self.player_not_have.append(first)
+            self.player_not_have.append(last)
+
     def go_to_shop(self, user_dice):
         user_pieces = user_dice
         valid_commands = None
+        self.check_what_user_need()
         while len(self.stock_pieces) != 0:
             print(f"{self.status}: Oops, i'm going to the market")
+
             self.correct_enter_input("Please press Enter to continue > ")
             new_dice = self.get_dice()
             user_pieces.append(new_dice)
@@ -176,7 +202,41 @@ Computer pieces: {len(self.computer_pieces)}
             self.change_player()
             return
 
-        self.make_move(self.computer_pieces[valid_commands[0] - 1])
+        move = self.search_the_best_option(valid_commands)
+        self.make_move(move)
+
+    def search_the_best_option(self, valid_commands):
+        commands = list(map(lambda x: x - 1, valid_commands))
+        moves = []
+        for i in range(len(self.computer_pieces)):
+            if i in commands:
+                moves.append(self.computer_pieces[i])
+
+        if len(moves) == 1:
+            return moves[0]
+
+        doubles = list(filter(lambda x: x[0] == x[1], moves))
+        if len(doubles) == 1:
+            return doubles[0]
+        elif len(doubles) > 1:
+            return list(sorted(doubles, key=itemgetter(0), reverse=True))[0]
+
+        results = list(map(lambda x: (x, self.determine_level(x)), moves))
+        sorted_to_level = list(sorted(results, key=itemgetter(1), reverse=True))
+        return sorted_to_level[0][0]
+
+    def determine_level(self, move):
+        total = 0
+        for i in range(7):
+            if move[0] == move[1] == i:
+                total += self.search_number(i)
+                continue
+            if move[0] == i or move[1] == i:
+                total += self.search_number(i)
+        return total
+
+    def search_number(self, number):
+        return len(list(filter(lambda x: self.find(x, [number]), self.domino_snake)))
 
     def search_move_option(self, user_pieces):
         possible_moves = []
@@ -223,7 +283,7 @@ Computer pieces: {len(self.computer_pieces)}
         self.init_game()
         self.domino_interface()
 
-    def step_3(self):
+    def step_5(self):
         self.init_game()
         need_stop = False
         while not need_stop:
@@ -248,7 +308,6 @@ Computer pieces: {len(self.computer_pieces)}
         user_option = list(filter(lambda x: self.find(x, pieces), self.player_pieces))
         computer_option = list(filter(lambda x: self.find(x, pieces), self.computer_pieces))
         stock_option = list(filter(lambda x: self.find(x, pieces), self.stock_pieces))
-        print(f"u: {user_option} c: {computer_option}, store: {stock_option}")
         if len(user_option) == 0 and len(computer_option) == 0 and len(stock_option) == 0:
             return True
 
@@ -300,4 +359,4 @@ Computer pieces: {len(self.computer_pieces)}
 dominoes = Dominoes()
 # dominoes.step_1()
 # dominoes.step_2()
-dominoes.step_3()
+dominoes.step_5()
