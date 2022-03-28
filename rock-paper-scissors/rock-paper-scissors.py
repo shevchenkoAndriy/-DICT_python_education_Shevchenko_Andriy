@@ -36,8 +36,9 @@ def simple_menu():
     computer_choice = random.choice(("rock", "paper", "scissors"))
     computer_win_if = search_win_move(user_choice)
     user_win_if = search_win_move(computer_choice)
-
-    if computer_win_if == computer_choice:
+    if computer_choice == user_choice:
+        print("There is draw")
+    elif computer_win_if == computer_choice:
         print(f"Sorry, but the computer chose {computer_choice}")
 
     elif user_win_if == user_choice:
