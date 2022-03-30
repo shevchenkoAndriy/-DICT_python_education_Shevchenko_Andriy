@@ -2,17 +2,40 @@ import random
 
 
 class RockPaperScissors:
+    all_options = ['fire', 'scissors', 'human', 'tree', 'wolf',
+                   'sponge', 'paper', 'air', 'water', 'dragon',
+                   'devil', 'lightning', 'gun', 'rock', 'snake']
+
+    map_options = {
+        'rock': ['fire', 'scissors', 'snake', 'human', 'tree', 'wolf', 'sponge'],
+        'fire': ['scissors', 'snake', 'human', 'tree', 'wolf', 'sponge', 'paper'],
+        'scissors': ['snake', 'human', 'tree', 'wolf', 'sponge', 'paper', 'air'],
+        'snake': ['human', 'tree', 'wolf', 'sponge', 'paper', 'air', 'water'],
+        'human': ['tree', 'wolf', 'sponge', 'paper', 'air', 'water', 'dragon'],
+        'tree': ['wolf', 'sponge', 'paper', 'air', 'water', 'dragon', 'devil'],
+        'wolf': ['sponge', 'paper', 'air', 'water', 'dragon', 'devil', 'lightning'],
+        'sponge': ['paper', 'air', 'water', 'dragon', 'devil', 'lightning', 'gun'],
+        'paper': ['air', 'water', 'dragon', 'devil', 'lightning', 'gun', 'rock'],
+        'air': ['water', 'dragon', 'devil', 'lightning', 'gun', 'rock', 'fire'],
+        'water': ['dragon', 'devil', 'lightning', 'gun', 'rock', 'fire', 'scissors'],
+        'dragon': ['devil', 'lightning', 'gun', 'rock', 'fire', 'scissors', 'snake'],
+        'devil': ['lightning', 'gun', 'rock', 'fire', 'scissors', 'snake', 'human'],
+        'lightning': ['gun', 'rock', 'fire', 'scissors', 'snake', 'human', 'tree'],
+        'gun': ['rock', 'fire', 'scissors', 'snake', 'human', 'tree', 'wolf'],
+    }
 
     def __init__(self):
         self.rating = None
         self.name = None
+        self.bot_options = None
+        self.selected_options = ["exit", "rating"]
 
     def menu(self):
         self.init_game()
         self.start_game()
 
     def start_game(self):
-        user_choice = self.correct_input_action("Your choice > ", ("rock", "paper", "scissors", "exit", "rating"))
+        user_choice = self.correct_input_action("Your choice > ", self.selected_options)
 
         if user_choice == "exit":
             self.save_rating()
@@ -24,18 +47,20 @@ class RockPaperScissors:
             self.start_game()
             return
 
-        computer_choice = random.choice(("rock", "paper", "scissors"))
-        computer_win_if = self.search_win_move(user_choice)
-        user_win_if = self.search_win_move(computer_choice)
-        if computer_choice == user_choice:
-            self.rating += 50
-            print("There is draw")
-        elif computer_win_if == computer_choice:
+        computer_choice = random.choice(self.bot_options)
+        bot_beats_it = self.map_options.get(computer_choice)
+        user_beats_it = self.map_options.get(user_choice)
+
+        if user_choice in bot_beats_it:
             print(f"Sorry, but the computer chose {computer_choice}")
 
-        elif user_win_if == user_choice:
+        elif computer_choice in user_beats_it:
             self.rating += 100
             print(f"Well done. The computer chose {computer_choice} and failed")
+
+        else:
+            self.rating += 50
+            print("There is draw")
 
         self.start_game()
 
@@ -57,6 +82,30 @@ class RockPaperScissors:
             self.rating = int(prev_value)
         else:
             self.rating = 0
+
+        self.select_options()
+
+    def select_options(self):
+        selected_options = self.correct_select_option()
+        print("Here is your option:")
+        print(*selected_options)
+        self.selected_options = [*self.selected_options, *selected_options]
+        self.bot_options = selected_options
+
+    def correct_select_option(self):
+        selected_options = input("Please input options > ")
+
+        if selected_options == "":
+            return ["rock", "paper", "scissors"]
+
+        selected_options = selected_options.split(",")
+        selected_options = list(filter(lambda x: x in self.all_options, selected_options))
+
+        if len(selected_options) < 3:
+            self.correct_select_option()
+            return
+
+        return selected_options
 
     def show_raring(self):
         print(f"Your rating: {self.rating}")
