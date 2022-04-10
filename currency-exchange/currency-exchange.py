@@ -1,3 +1,7 @@
+import requests
+import json
+from functools import lru_cache
+
 
 def simple_currency_exchange():
     coins = correct_float_input("Please, enter the number "
@@ -14,6 +18,35 @@ def show_currency_exchange():
     print(f"I will get {round(coin * 0.6)} HNL from the sale of {coin} coin")
     print(f"I will get {round(coin * 6.87)} AUD from the sale of {coin} coin")
     print(f"I will get {round(coin * 0.73)} MAD from the sale of {coin} coin")
+
+
+@lru_cache(maxsize=100)
+def get_exchange_rate(code):
+    print(f"Search... ")
+    response = requests.get(f"http://www.floatrates.com/daily/{code}.json")
+    if response.ok:
+        result = response.json()
+        d = result.get("usd").get("rate")
+        e = result.get("eur").get("rate")
+        return round(d, 2), round(e, 2)
+
+    else:
+        return
+
+
+def step_3():
+    code = input("> ").lower()
+    results = get_exchange_rate(code)
+    if not results:
+        print(f'No results found for "{code}"')
+        step_3()
+        return
+
+    dollar, euro = results
+    print(f"""Dollar: {round(dollar, 2)}
+Euro: {round(euro, 2)}""")
+    step_3()
+    ...
 
 
 def correct_float_input(string):
@@ -34,4 +67,5 @@ def correct_float_input(string):
 
 
 # simple_currency_exchange()
-show_currency_exchange()
+# show_currency_exchange()
+step_3()
