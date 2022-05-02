@@ -1,16 +1,35 @@
 import requests
+from bs4 import BeautifulSoup
 
 
 def simple_parser():
     url = correct_input_url("Please input URL > ")
     response = requests.get(url)
-    if response.ok: 
+    if response.ok:
         result = response.json()
         print(result.get('content'))
 
     else:
         print("Invalid quote resource!")
-        
+
+
+def parse_html_doc():
+    url = correct_input_url("Please input URL > ")
+    response = requests.get(url, headers={'Accept-Language': 'en-US,en;q=0.5'})
+
+    try:
+        html_doc = response.text
+        soup = BeautifulSoup(html_doc, 'html.parser')
+        title = soup.h1.string
+        description = soup.find('meta', {'name': 'description'})
+        if not title or not description:
+            raise AttributeError()
+        film_info = {"title": title, "description": description["content"]}
+        print(film_info)
+
+    except AttributeError:
+        print("Invalid movie page!")
+
 
 def correct_input_url(string):
     url = input(string)
@@ -22,4 +41,5 @@ def correct_input_url(string):
     correct_input_url(string)
 
 
-simple_parser()
+# simple_parser()
+parse_html_doc()
