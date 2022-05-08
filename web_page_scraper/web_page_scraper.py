@@ -1,5 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
+import shutil
+from os import mkdir
 import string
 
 BASE_URL = "https://www.nature.com/nature/articles?sort=PubDate&year=2022&page=3"
@@ -49,10 +51,14 @@ def save_in_file(page):
         print("Content saved.")
 
 
-def parsed_articles():
+def parsing_articles():
+    shutil.rmtree("articles")
     response = requests.get(BASE_URL)
     if response.ok:
         links = get_tuple_links(response)
+        print("Determine what articles you need, this may take some time...")
+        mkdir("articles")
+        save_all_article(links)
 
     else:
         print(f"The URL returned {response.status_code}")
@@ -75,27 +81,53 @@ def get_tuple_links(response):
     return map(lambda x: (x.text, x["href"]), links_tags)
 
 
-def get_article_by_link(link):
-    name, path = link
+def get_article_by_path(path):
     host = "https://www.nature.com"
     response = requests.get(f"{host}{path}")
     if response.ok:
         html_doc = response.text
         soup = BeautifulSoup(html_doc, 'html.parser')
-        div = soup.find("div", class_="c-article-body u-clearfix")
-        save_article(name, div.text)
+        try:
+
+            article_type = soup.find("article")["data-track-component"]
+            if article_type != "news":
+                return
+        except KeyError:
+            return
+
+        if article_type != "news":
+            return
+
+        try:
+            article_content = soup.find("div", {"class": "c-article-body"}).get_text().strip()
+        except AttributeError:
+            article_content = soup.find("article").get_text().strip()
+        return article_content
+
+
+def save_all_article(links):
+    for link in links:
+        name, path = link
+        article = get_article_by_path(path)
+        if not article:
+            continue
+        save_article(name, article)
 
 
 def save_article(name: string, content):
-    name = name.replace(" ", "_")
-    print("Name: ", name)
-    with open(f"articles/{name}.txt", "w") as f:
+    table = name.maketrans("", "", string.punctuation + "’")
+    title = name.translate(table)
+    title = title.strip().replace(" ", "_")
+
+    print("Title: ", title)
+    with open(f"articles/{title}.txt", "w") as f:
         f.write(content)
-        print("Content saved.")
+        print("Article saved.")
 
 
 # simple_parser()
 # parse_html_doc()
 # save_html_page()
 # parsed_articles()
-get_article_by_link(('Base edit your way to better crops', '/articles/d41586-022-01117-z'))
+# get_article_by_path('/articles/d41586-022-01117-z')
+parsing_articles()
