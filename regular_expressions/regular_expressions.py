@@ -123,6 +123,36 @@ def equal_len(regex: str, literal: str) -> bool:
         return equal_len(regex[1:], literal[1:])
 
 
+def current_scenario(base: list, index: int, symbol: str, literal_len: int) -> list:
+    scenario_branches: list = []
+
+    if symbol in ["?", "*"]:
+        base_copy: list = base[:]
+        base_copy[index] = ""
+        scenario_branches.append(base_copy)
+
+    if symbol in ["*", "+"]:
+        offset: int = 0
+        if base[0] == "^":
+            offset += 1
+        if base[-1] == "$":
+            offset += 1
+
+        repeat_count: int = 2
+        current_len: int = len(base) + repeat_count - 1
+
+        max_len: int = literal_len + offset
+        while current_len <= max_len:
+            base_copy: list = base[:]
+            index_char: str = base_copy[index]
+            base_copy[index] = index_char * repeat_count
+            scenario_branches.append(base_copy)
+            repeat_count += 1
+            current_len += 1
+
+    return scenario_branches
+
+
 def different_len(regex: str, literal: str) -> bool:
     if "^" in regex:
         return True
@@ -180,6 +210,71 @@ def complicated_parser(req_ex, string):
     return True
 
 
+def find_scenarios(base: list, idx_with_meta: dict, max_len: int) -> list:
+    all_scenarios: list = [base]
+    for index, meta in idx_with_meta.items():
+        current_scenarios: list = all_scenarios[:]
+        for scenario in current_scenarios:
+            all_scenarios.extend(current_scenario(scenario, index, meta, max_len))
+
+    return ["".join(scenario) for scenario in all_scenarios]
+
+
+def repetition_operators(regex: str, literal: str, escape: dict = None):
+    """
+    Retroactively added :param dict escape:
+    to this function during Stage 6 implementation
+    """
+
+    meta_char: list = ["?", "*", "+"]
+    if all(char not in meta_char for char in regex):
+        return regex_v3(regex, literal)
+
+    index_meta: dict = {}
+
+    if escape is None:
+        escape: dict = {}
+
+    for i in range(1, len(regex)):
+        if regex[i] in meta_char and escape.get(i) is None:
+            offset = len(index_meta)
+            index_meta[i - 1 - offset] = regex[i]
+
+    base_chars: list = [v for i, v in enumerate(regex) if v not in meta_char or escape.get(i)]
+    scenarios: list = find_scenarios(base_chars, index_meta, len(literal))
+
+    for regex_scenario in scenarios:
+        current_eval: bool = regex_v3(regex_scenario, literal)
+        if current_eval:
+            return True
+
+    return False
+
+
+def escape_operator(regex, string):
+    if all(char != "\\" for char in regex):
+        return repetition_operators(regex, string)
+
+    index_meta: dict = {}
+    offset: int = 0
+    base_chars: list = []
+
+    for i in range(len(regex)):
+        if regex[i] == "\\":
+            if i > 0 and index_meta.get(i - offset) is not None:
+                base_chars.append(regex[i])
+                continue
+
+            index_meta[i - offset] = "\\"
+            offset = len(index_meta)
+        else:
+            base_chars.append(regex[i])
+
+    base_chars_str: str = "".join(base_chars)
+
+    return repetition_operators(base_chars_str, string, index_meta)
+
+
 def main():
     req_ex, string = correct_input_reg_ex()
     first_check_level = simple_reg_ex_parser(req_ex, string)
@@ -206,13 +301,15 @@ def main():
     #
     #     return
 
-    fifth_check_level = regex_v4(req_ex, string)
-
-    if not fifth_check_level:
-        print(False)
-        return
+    # fifth_check_level = regex_v4(req_ex, string)
+    #
+    # if not fifth_check_level:
+    #     print(False)
+    #     return
+    escape_operator(req_ex, string)
 
     print(True)
 
 
 main()
+
